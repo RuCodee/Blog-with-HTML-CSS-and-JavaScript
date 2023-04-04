@@ -1,0 +1,115 @@
+In this new repository you will learn how to add a section on every HTML web page and update it manually. This will update every html webpage instead of updating every html page manually.
+
+This is very useful when you are creating a blog with no database. Indeed think, you may want to add a section on your article pages mentioning "Latest Articles", instead of updating them everytime you post a new article you can post it in one go.
+This process is very usefull especially if you have hundreds of articles on your blog. 
+
+IN THIS EXAMPLE YOU WILL SEE A CAROUSEL WITH LATEST ARTICLE POSTS.
+
+You cannot directly achieve this functionality using only HTML and CSS, you can use a bit of JavaScript or PHP to help you include the same section in multiple HTML pages. I'll provide you with two solutions, one using JavaScript and one using PHP.
+
+Solution 1: JavaScript
+
+First, create an HTML file for the latest posts section, let's call it latest-posts.html:
+
+<!-- latest-posts.html -->
+<div class="latest-posts">
+  <div class="carousel">
+    <!-- Add your carousel items here -->
+    <div class="carousel-item">Article 1</div>
+    <div class="carousel-item">Article 2</div>
+    <!-- ... -->
+  </div>
+</div>
+
+Next, create a CSS file for styling the latest posts section, let's call it latest-posts.css:
+
+/* latest-posts.css */
+.latest-posts {
+  /* Add your styles for the latest-posts container */
+}
+
+.carousel {
+  /* Add your styles for the carousel container */
+}
+
+.carousel-item {
+  /* Add your styles for the carousel items */
+}
+
+Include the latest-posts.css file in the <head> of each HTML page:
+
+<head>
+  <!-- ... -->
+  <link rel="stylesheet" href="latest-posts.css">
+</head>
+
+Create a new JavaScript file called latest-posts.js:
+
+// latest-posts.js
+document.addEventListener("DOMContentLoaded", function () {
+  const latestPostsContainers = document.querySelectorAll(".latest-posts-container");
+
+  latestPostsContainers.forEach(function (container) {
+    fetch("latest-posts.html")
+      .then(response => response.text())
+      .then(html => {
+        container.innerHTML = html;
+      });
+  });
+});
+
+Include the latest-posts.js file at the bottom of each HTML page, before the closing </body> tag, and add a latest-posts-container div where you want the latest posts section to appear:
+
+<!-- your-page.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- ... -->
+    <link rel="stylesheet" href="latest-posts.css">
+  </head>
+  <body>
+    <!-- ... -->
+    <div class="latest-posts-container"></div>
+    <!-- ... -->
+    <script src="latest-posts.js"></script>
+  </body>
+</html>
+
+Solution 2: PHP
+
+If your server supports PHP, you can use the PHP include function to include the latest posts section in every HTML page. First, rename your HTML pages to .php files, e.g., index.html to index.php. Then, follow these steps:
+
+Create a file called latest-posts.php and place the latest posts HTML content inside:
+
+<!-- latest-posts.php -->
+<div class="latest-posts">
+  <div class="carousel">
+    <!-- Add your carousel items here -->
+    <div class="carousel-item">Article 1</div>
+    <div class="carousel-item">Article 2</div>
+    <!-- ... -->
+  </div>
+</div>
+
+Include the latest-posts.css file in the <head> of each PHP page:
+
+<head>
+  <!-- ... -->
+  <link rel="stylesheet" href="latest-posts.css">
+</head>
+
+Now, use the PHP include function to include the latest-posts.php file in your PHP pages:
+
+<!-- your-page.php -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- ... -->
+    <link rel="stylesheet" href="latest-posts.css">
+  </head>
+  <body>
+    <!-- ... -->
+    <?php include 'latest-posts.php'; ?>
+    <!-- ... -->
+  </body>
+</html>
