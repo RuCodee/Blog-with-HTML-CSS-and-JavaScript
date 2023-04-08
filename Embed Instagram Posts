@@ -1,0 +1,77 @@
+Yes, you can embed your last 4 (or any X number) Instagram posts on your website using the Instagram API and your website's existing technologies: HTML, JavaScript, PHP, and CSS. To do this, follow these steps:
+
+1) STEP 1 
+Register a new Instagram App and get the Access Token:
+a. Visit the Facebook Developer site: https://developers.facebook.com/apps/
+b. Click 'Create App' and follow the prompts.
+c. Set up the 'Instagram Basic Display' product and configure the settings.
+d. Add your website's URL to the 'Valid OAuth Redirect URIs' field.
+e. Complete the 'App Review' process to make your app public.
+f. Use the 'User Token Generator' to generate an access token for your Instagram account.
+
+2) STEP 2 
+Fetch the last 4 Instagram posts using PHP and the Instagram API:
+a. Create a new PHP file (e.g., 'instagram_posts.php').
+b. In this file, use the access token to fetch the last 4 posts using the Instagram API:
+
+<?php
+$access_token = "YOUR_ACCESS_TOKEN";
+$limit = 4;
+$url = "https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&access_token={$access_token}&limit={$limit}";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($curl);
+curl_close($curl);
+
+$posts = json_decode($response)->data;
+echo json_encode($posts);
+?>
+
+3) STEP 3 
+Display the Instagram posts on your website using JavaScript and AJAX:
+a. Add a container element in your HTML file where you want to display the posts:
+
+<div id="instagram-posts"></div>
+
+b. Add JavaScript code to fetch the posts from 'instagram_posts.php' and display them:
+
+function fetchInstagramPosts() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const posts = JSON.parse(xhr.responseText);
+      displayInstagramPosts(posts);
+    }
+  };
+  xhr.open("GET", "instagram_posts.php", true);
+  xhr.send();
+}
+
+function displayInstagramPosts(posts) {
+  const container = document.getElementById("instagram-posts");
+  posts.forEach((post) => {
+    const postElement = document.createElement("a");
+    postElement.href = post.permalink;
+    postElement.target = "_blank";
+    postElement.style.display = "inline-block";
+    postElement.style.width = "25%";
+    postElement.style.padding = "10px";
+    postElement.style.boxSizing = "border-box";
+
+    const image = document.createElement("img");
+    image.src = post.media_type === "IMAGE" ? post.media_url : post.thumbnail_url;
+    image.style.width = "100%";
+    image.style.height = "auto";
+
+    postElement.appendChild(image);
+    container.appendChild(postElement);
+  });
+}
+
+fetchInstagramPosts();
+
+4) STEP 4 
+
+Style the posts using CSS as needed.
+This will fetch the last 4 posts from your Instagram account and display them in the specified container on your website.
