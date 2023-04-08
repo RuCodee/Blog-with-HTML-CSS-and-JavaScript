@@ -1,0 +1,78 @@
+Let's try a different approach for implementing the search functionality using only JavaScript and the Fetch API, which should work in modern browsers.
+To find articles, we are using tags. For this reason we are going to use a Json file to create and index. This file will contain only the title of article, keywords (tags), and the path of your written article.
+In this exercise we are using only HTML, JavaScript, and Jason. All you have to create is and index.html, searchBarArticles.js, and articleTags.json file.
+
+STEP 1 Create an index.html file with the following content:
+//Save this file as index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Articles</title>
+</head>
+<body>
+    <form id="search-form">
+        <input type="search" id="search-field" name="field-name" value="" placeholder="Search Here" required>
+        <button type="submit" class="search-btn"><span class="fa fa-search"></span>Search</button>
+    </form>
+
+    <div id="search-results"></div>
+
+    <script src="searchBarArticles.js"></script>
+</body>
+</html>
+<!--end of html file-->
+
+<!--SearchBarArticle.js-->
+STEP 2 create Javascript file with following code. 
+//save this file as searchBarArticle.js
+
+document.getElementById("search-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    searchBarArticles();
+});
+
+async function searchBarArticles() {
+    const searchField = document.getElementById("search-field");
+    const searchTerm = searchField.value.toLowerCase();
+    const response = await fetch("articleTags.json");
+    const articles = await response.json();
+    const resultsDiv = document.getElementById("search-results");
+
+    resultsDiv.innerHTML = "";
+
+    const results = articles.filter(article => {
+        return article.keywords.toLowerCase().includes(searchTerm);
+    });
+
+    if (results.length > 0) {
+        results.forEach(article => {
+            const articleLink = document.createElement("a");
+            articleLink.href = article.path;
+            articleLink.innerText = article.title;
+            resultsDiv.appendChild(articleLink);
+            resultsDiv.appendChild(document.createElement("br"));
+        });
+    } else {
+        resultsDiv.innerHTML = "No results found.";
+    }
+}
+<!--end of javascript file-->
+
+<!--Json File-->
+STEP 3 Create Json file.
+//save this file as articleTags.js
+[
+    {
+        "title": "Article 1",
+        "keywords": "html, javascript, websites",  //these words are tags
+        "path": "articles/article1.html"
+    },
+    {
+        "title": "Article 2",
+        "keywords": "javascript, php, json", //these words are tags
+        "path": "articles/article2.html"
+    }
+]
+<!--end of Json File-->
