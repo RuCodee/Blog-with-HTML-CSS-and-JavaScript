@@ -1,0 +1,104 @@
+To enable searching by title and displaying suggestions as the reader types, you can implement a simple autocomplete feature for the search bar. Here's how you can modify the existing code to achieve this:
+
+STEP 1 create an index.html file as shown below to add a new div for displaying suggestions:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Articles</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <form id="search-form">
+        <input type="search" id="search-field" name="field-name" value="" placeholder="Search Here" required>
+        <button type="submit" class="search-btn"><span class="fa fa-search"></span>Search</button>
+    </form>
+    <div id="suggestions"></div>
+    <div id="search-results"></div>
+
+    <script src="searchBarArticles.js"></script>
+</body>
+</html>
+<!--end of the html-->
+
+STEP 2 Add a new styles.css file to style the suggestions:
+
+#suggestions {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    width: 100%;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    display: none;
+}
+.suggestion {
+    cursor: pointer;
+    padding: 5px;
+}
+.suggestion:hover {
+    background-color: #f1f1f1;
+}
+<!-- end of css file -->
+
+STEP 3 Modify the searchBarArticles.js file to add event listeners for showing suggestions as the user types, and hiding the suggestions when the user clicks outside the search field:
+
+document.getElementById("search-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    searchBarArticles();
+});
+
+document.getElementById("search-field").addEventListener("input", function () {
+    showSuggestions();
+});
+
+document.addEventListener("click", function (event) {
+    if (event.target.id !== "search-field") {
+        hideSuggestions();
+    }
+});
+
+async function showSuggestions() {
+    const searchField = document.getElementById("search-field");
+    const searchTerm = searchField.value.toLowerCase();
+    const response = await fetch("articleTags.json");
+    const articles = await response.json();
+    const suggestionsDiv = document.getElementById("suggestions");
+
+    suggestionsDiv.innerHTML = "";
+    suggestionsDiv.style.display = "none";
+
+    const suggestions = articles.filter(article => {
+        return article.title.toLowerCase().includes(searchTerm) || article.keywords.toLowerCase().includes(searchTerm);
+    });
+
+    if (suggestions.length > 0 && searchTerm !== "") {
+        suggestionsDiv.style.display = "block";
+        suggestions.forEach(article => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.classList.add("suggestion");
+            suggestionItem.innerText = article.title;
+            suggestionItem.addEventListener("click", function () {
+                searchField.value = article.title;
+                searchBarArticles();
+                hideSuggestions();
+            });
+            suggestionsDiv.appendChild(suggestionItem);
+        });
+    }
+}
+
+function hideSuggestions() {
+    document.getElementById("suggestions").style.display = "none";
+}
+
+async function searchBarArticles() {
+    // ...
+    // The rest of the searchBarArticles function remains unchanged (check it here:)
+}
+
+<!--end of the JavaScript-->
+With these changes, as the user types in the search field, a list of suggested article titles and tags will be displayed based on the entered text. The user can then click on a suggestion, which will populate the search field with the selected title and perform the search.
