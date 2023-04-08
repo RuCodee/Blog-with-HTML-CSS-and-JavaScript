@@ -97,7 +97,7 @@ function hideSuggestions() {
 
 async function searchBarArticles() {
     // ...
-    // The rest of the searchBarArticles function remains unchanged (check it here:)
+    // The rest of the searchBarArticles function remains unchanged (check it here: https://github.com/RuCodee/Blog-with-HTML-CSS-and-JavaScript/blob/main/Create%20Search%20Bar%20Without%20Php)
 }
 
 <!--end of the JavaScript-->
